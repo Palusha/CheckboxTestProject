@@ -1,0 +1,30 @@
+version: "3.9"  
+  
+services:  
+  web:
+    container_name: web
+    build: .
+    command: uvicorn src.main:app --host 0.0.0.0 --reload
+    ports:  
+      - "8000:8000"  
+    volumes:  
+      - ./:/home/app  
+    env_file:  
+      - .env 
+    depends_on:
+      - db
+  
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    volumes:  
+      - postgres_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    env_file:  
+      - .db.env 
+
+
+volumes:  
+  postgres_data:  
+    driver: local
